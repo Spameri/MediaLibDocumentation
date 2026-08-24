@@ -234,3 +234,17 @@ anything about what is in your library. You do not need a GitHub account.
 
 Include which film or episode it was, what you were watching on, and whether you
 were at home or away. Those three facts distinguish most causes from each other.
+
+## Does anything I do reach a third party?
+
+Two things, both only when you ask for them.
+
+Pressing **Trailer** on a title opens a YouTube player. That embed is the one
+third-party frame in the product; it loads from youtube-nocookie.com, YouTube's
+reduced-tracking domain, and nothing loads until you press the button. If you
+never press it, YouTube never hears from you.
+
+Submitting a scene to the **guessing game** uploads that single image to
+spameri.cz under your linked account, where it waits for a moderator. Nothing
+else about your library travels with it, and nothing is ever submitted
+automatically — every submission is a button you pressed on a scene you chose.
