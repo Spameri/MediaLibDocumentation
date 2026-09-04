@@ -225,7 +225,7 @@ only thing you lose is the watch history, which lives on the server.
 
 ## Something is broken. Where do I report it?
 
-Sign in and go to [api.spameri.cz/feedback](https://api.spameri.cz/feedback).
+Sign in and go to [media.knivy.xyz/feedback](https://media.knivy.xyz/feedback).
 Pick whether it is a fault or a request, describe it, and send.
 
 That files a report in the public issue tracker under your display name and the
@@ -245,6 +245,6 @@ reduced-tracking domain, and nothing loads until you press the button. If you
 never press it, YouTube never hears from you.
 
 Submitting a scene to the **guessing game** uploads that single image to
-spameri.cz under your linked account, where it waits for a moderator. Nothing
+knivy.xyz under your linked account, where it waits for a moderator. Nothing
 else about your library travels with it, and nothing is ever submitted
 automatically — every submission is a button you pressed on a scene you chose.

@@ -4,7 +4,7 @@ The agent is one small program. It has no installer, no dependencies to
 manage, and no Docker. You download a file, run it once to pair it with your
 account, then arrange for it to keep running.
 
-Before you start, sign in at [api.spameri.cz](https://api.spameri.cz), go to
+Before you start, sign in at [media.knivy.xyz](https://media.knivy.xyz), go to
 **Settings → Linked Machine** (`/settings/machine`) and press **Generate
 pairing code**. You get an eight-character code like `H4KP-2QRW`. It is valid
 for 15 minutes; if it runs out, generate another one.
@@ -85,7 +85,7 @@ curl.exe -L -o C:\medialib\medialib-agent.exe https://github.com/Spameri/MediaLi
 ### 3. Pair it
 
 ```
-C:\medialib\medialib-agent.exe pair --server https://api.spameri.cz --code H4KP-2QRW
+C:\medialib\medialib-agent.exe pair --server https://media.knivy.xyz --code H4KP-2QRW
 ```
 
 Use your own code. The hyphen is optional — `H4KP2QRW` works the same.
@@ -108,7 +108,7 @@ C:\medialib\medialib-agent.exe run
 ```
 
 Leave it for a few seconds. You are looking for a line like
-`tunnel established to wss://api.spameri.cz/tunnel`. Windows Firewall may ask
+`tunnel established to wss://media.knivy.xyz/tunnel`. Windows Firewall may ask
 about incoming connections — allow it on private networks so that watching at
 home works. Press `Ctrl+C` to stop it.
 
@@ -223,7 +223,7 @@ for it:
 
 ```
 sudo -u medialib env HOME=/var/lib/medialib-agent \
-  /opt/medialib-agent/medialib-agent pair --server https://api.spameri.cz --code H4KP-2QRW
+  /opt/medialib-agent/medialib-agent pair --server https://media.knivy.xyz --code H4KP-2QRW
 ```
 
 The credential is written to
@@ -275,7 +275,7 @@ sudo journalctl -u medialib-agent -f
 ```
 
 Within a few seconds you should see `tunnel established to
-wss://api.spameri.cz/tunnel`.
+wss://media.knivy.xyz/tunnel`.
 
 If you run a firewall, allow the home-network port:
 
@@ -346,7 +346,7 @@ updates.
 mkdir -p /volume1/medialib
 curl -L -o /volume1/medialib/medialib-agent https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/medialib-agent-linux-arm64
 chmod +x /volume1/medialib/medialib-agent
-/volume1/medialib/medialib-agent pair --server https://api.spameri.cz --code H4KP-2QRW
+/volume1/medialib/medialib-agent pair --server https://media.knivy.xyz --code H4KP-2QRW
 ```
 
 If that fails with `cannot execute binary file`, you have an Intel NAS — use
@@ -386,7 +386,7 @@ it back until the next reboot. If your NAS has systemd, prefer it.
 Four things to look at, in order of usefulness.
 
 **1. The web UI.** Go to
-[api.spameri.cz/settings/machine](https://api.spameri.cz/settings/machine). Your
+[media.knivy.xyz/settings/machine](https://media.knivy.xyz/settings/machine). Your
 machine should be listed with a green **Online** badge, its platform, and the
 agent version. This is the check that matters — it means the machine reached the
 server and the server can reach it back.
@@ -394,7 +394,7 @@ server and the server can reach it back.
 **2. The logs.** The line you want is:
 
 ```
-tunnel established to wss://api.spameri.cz/tunnel
+tunnel established to wss://media.knivy.xyz/tunnel
 ```
 
 `journalctl -u medialib-agent -f` on Linux; the console window on Windows.
@@ -440,7 +440,7 @@ the agent. You are then responsible for replacing the binary yourself.
 - **One machine per account.** Pairing a second machine is refused with "This
   account already has a linked machine. Revoke it first." Unlink the old one
   under Settings → Linked Machine first.
-- **The agent only ever connects outward** — to `api.spameri.cz` over HTTPS and
+- **The agent only ever connects outward** — to `media.knivy.xyz` over HTTPS and
   one long-lived WebSocket. Nothing needs to reach in from the internet, so
   there is nothing to configure on your router.
 - **It listens on port 8484** on your local network only, for watching at home.

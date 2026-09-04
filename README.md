@@ -13,7 +13,7 @@ rent. You supply the files; this gives you a decent way to watch them.
   is the important one. When that machine is asleep or unplugged, nothing can
   play from outside your home, because the files only ever live there.
 - **An account.** Registration is invite-only, so someone has to send you a
-  link. It looks like `https://api.spameri.cz/register?code=7F3KD9QAXM`.
+  link. It looks like `https://media.knivy.xyz/register?code=7F3KD9QAXM`.
 - **A phone, an Android TV, or any modern web browser** to watch on.
 
 A reasonable home upload speed helps but is not required for watching at home.
@@ -23,7 +23,7 @@ More on that in [faq.md](faq.md).
 
 There are three parts.
 
-**The platform** at [api.spameri.cz](https://api.spameri.cz) is a website run on
+**The platform** at [media.knivy.xyz](https://media.knivy.xyz) is a website run on
 a server. It holds your account, the list of what is in your library, the
 posters and descriptions, and where you got to in each episode. It does not hold
 your video files.
@@ -72,7 +72,7 @@ before they commit to setting this up.
 
 ## When something is broken
 
-Sign in and go to [api.spameri.cz/feedback](https://api.spameri.cz/feedback).
+Sign in and go to [media.knivy.xyz/feedback](https://media.knivy.xyz/feedback).
 Describe what happened and send it. That files a report in the public issue
 tracker under your display name — your email address is never included. You do
 not need a GitHub account.

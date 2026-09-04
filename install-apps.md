@@ -5,7 +5,7 @@ file installs on either; the app works out which one it is running on and shows
 the appropriate interface.
 
 You can also just use a web browser, in which case there is nothing to install —
-sign in at [api.spameri.cz](https://api.spameri.cz) and press play. The browser
+sign in at [media.knivy.xyz](https://media.knivy.xyz) and press play. The browser
 always fetches video through the server, even at home, so the app is the better
 option on a television or a phone you use at home a lot.
 
@@ -118,13 +118,13 @@ You do not type your password with a remote control. When you open the app on a
 television it shows a sign-in screen with a short code on it:
 
 > **Sign in to MediaLib**
-> On your phone or computer, go to `https://api.spameri.cz/link` and enter this
+> On your phone or computer, go to `https://media.knivy.xyz/link` and enter this
 > code
 >
 > **K7M4QX**
 
-Take your phone, sign in at [api.spameri.cz](https://api.spameri.cz), go to
-[api.spameri.cz/link](https://api.spameri.cz/link), and type the code in.
+Take your phone, sign in at [media.knivy.xyz](https://media.knivy.xyz), go to
+[media.knivy.xyz/link](https://media.knivy.xyz/link), and type the code in.
 
 The television is checking every five seconds, so a moment after you approve it
 the screen moves on by itself. You do not need to touch the remote.
@@ -157,6 +157,6 @@ nothing to update.
 
 ## Which app talks to which server
 
-Nothing to configure. The app is built pointing at `api.spameri.cz` and there is
+Nothing to configure. The app is built pointing at `media.knivy.xyz` and there is
 no server address field in it. If you are following instructions that mention
 typing in a server URL, those instructions are out of date.

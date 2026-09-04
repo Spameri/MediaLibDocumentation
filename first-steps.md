@@ -8,7 +8,7 @@ files. If it is not, start with [install-agent.md](install-agent.md).
 Open the invite link you were sent. It looks like:
 
 ```
-https://api.spameri.cz/register?code=7F3KD9QAXM
+https://media.knivy.xyz/register?code=7F3KD9QAXM
 ```
 
 The code is filled in for you. Choose a name and a password and register.
@@ -21,14 +21,14 @@ named after you. Select it to carry on.
 ## 2. Link your machine
 
 Go to **Settings → Linked Machine**
-([api.spameri.cz/settings/machine](https://api.spameri.cz/settings/machine)) and
+([media.knivy.xyz/settings/machine](https://media.knivy.xyz/settings/machine)) and
 press **Generate pairing code**. You get something like `H4KP-2QRW`, good for
 15 minutes.
 
 On the machine with your files, run:
 
 ```
-/opt/medialib-agent/medialib-agent pair --server https://api.spameri.cz --code H4KP-2QRW
+/opt/medialib-agent/medialib-agent pair --server https://media.knivy.xyz --code H4KP-2QRW
 ```
 
 Adjust the path for where you installed it, and use the code you were just
@@ -164,7 +164,7 @@ Profiles work like they do on a streaming service: separate watch history and
 separate continue-watching lists for each person in the house, all sharing one
 account and one library.
 
-Go to [api.spameri.cz/profiles](https://api.spameri.cz/profiles) and add one per
+Go to [media.knivy.xyz/profiles](https://media.knivy.xyz/profiles) and add one per
 person. Each profile can have:
 
 - **Parental controls** — a content rating limit and a PIN, under

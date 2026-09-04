@@ -5,7 +5,7 @@ on before suggesting what to do, because the fix usually depends on which of
 several causes you have.
 
 If none of this helps, report it at
-[api.spameri.cz/feedback](https://api.spameri.cz/feedback) — say what you were
+[media.knivy.xyz/feedback](https://media.knivy.xyz/feedback) — say what you were
 doing, which film or episode, and what you were watching on.
 
 ---
@@ -67,15 +67,15 @@ wrong.
 
    ```
    sudo -u medialib env HOME=/var/lib/medialib-agent \
-     /opt/medialib-agent/medialib-agent pair --server https://api.spameri.cz --code XXXX-XXXX
+     /opt/medialib-agent/medialib-agent pair --server https://media.knivy.xyz --code XXXX-XXXX
    ```
 
-5. **Outbound traffic.** The agent needs to reach `api.spameri.cz` on port 443,
+5. **Outbound traffic.** The agent needs to reach `media.knivy.xyz` on port 443,
    including a WebSocket connection that stays open. Corporate networks and some
    security software interfere with long-lived connections. Test the basics:
 
    ```
-   curl -sS https://api.spameri.cz/health
+   curl -sS https://media.knivy.xyz/health
    ```
 
    If that fails, the problem is the machine's networking, not this software.
@@ -239,11 +239,11 @@ You can also upload your own `.srt` if you have it.
 
 **"Invalid credentials" or the login is rejected.** Your email and password are
 the ones you registered with on the website. Confirm they work by signing in at
-[api.spameri.cz](https://api.spameri.cz) in a browser. If they do not work
+[media.knivy.xyz](https://media.knivy.xyz) in a browser. If they do not work
 there either, use the password reset on the sign-in page.
 
 **The app cannot reach anything at all.** Check that the phone has working
-internet, then that `https://api.spameri.cz` loads in the phone's browser. If
+internet, then that `https://media.knivy.xyz` loads in the phone's browser. If
 the website loads but the app does not connect, the app build may be older than
 the current server — reinstall the newest `.apk` from the releases page.
 
@@ -255,7 +255,7 @@ the current server — reinstall the newest `.apk` from the releases page.
 - **You misread a character.** Codes never contain I, L, O, 0 or 1, precisely so
   that they cannot be confused. If you think you see one, it is something else.
 - **You were signed out on the phone.** You must be signed in at
-  [api.spameri.cz](https://api.spameri.cz) before the `/link` page will do
+  [media.knivy.xyz](https://media.knivy.xyz) before the `/link` page will do
   anything.
 
 If the code flow is not working at all, the television's sign-in screen has a
