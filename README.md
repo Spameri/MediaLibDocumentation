@@ -12,8 +12,9 @@ rent. You supply the files; this gives you a decent way to watch them.
 - **A computer or NAS that holds your video files and stays switched on.** This
   is the important one. When that machine is asleep or unplugged, nothing can
   play from outside your home, because the files only ever live there.
-- **An account.** Registration is invite-only, so someone has to send you a
-  link. It looks like `https://media.knivy.xyz/register?code=7F3KD9QAXM`.
+- **An account.** Sign-in is with a [knivy.xyz](https://knivy.xyz) account,
+  and accounts are set up by invitation — ask the person who runs your Knivy.
+  There is no public registration form yet.
 - **A phone, an Android TV, or any modern web browser** to watch on.
 
 A reasonable home upload speed helps but is not required for watching at home.
@@ -72,15 +73,12 @@ before they commit to setting this up.
 
 ## When something is broken
 
-Sign in and go to [media.knivy.xyz/feedback](https://media.knivy.xyz/feedback).
-Describe what happened and send it. That files a report in the public issue
-tracker under your display name — your email address is never included. You do
-not need a GitHub account.
+Sign in and go to [media.knivy.xyz/feedback](https://media.knivy.xyz/feedback), which
+takes you to the public issue tracker. Reports are filed under your own GitHub
+account. If the problem happened during playback, the player's **Report a
+problem** button is better still — it snapshots the technical evidence
+(stream state, the machine's recent log lines) so nobody has to ask you for
+it.
 
 Say which film or episode it was and what you were watching on. A report that
 says "it does not work" cannot be acted on.
-
-## Reporting a problem
-
-Open an issue here, or use the "Tell me about it" link inside the app, which
-files one for you with your version details attached.

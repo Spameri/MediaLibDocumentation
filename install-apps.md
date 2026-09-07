@@ -17,7 +17,7 @@ install it yourself:
 **<https://github.com/Spameri/MediaLibDocumentation/releases/latest>**
 
 Look for the file ending in `.apk` — it is named after the version, for example
-`medialib-0.2.0.apk`.
+`knivy-0.4.0.apk`.
 
 Android 6.0 or newer is required. Anything from the last decade qualifies.
 
@@ -30,7 +30,9 @@ Android 6.0 or newer is required. Anything from the last decade qualifies.
    install unknown apps, with a button to the setting.
 4. Turn on **Allow from this source** for your browser, then press back and
    install.
-5. Open the app and sign in with your email address and password.
+5. Open the app. It shows a short code; on any browser where you are signed
+   in to Knivy, go to [media.knivy.xyz/link](https://media.knivy.xyz/link) and type it in.
+   The phone signs itself in a moment later.
 
 If you never see the prompt in step 3, the setting is at **Settings → Apps →
 Special app access → Install unknown apps**. Find the browser you downloaded
@@ -87,7 +89,7 @@ terminal. Nothing needs to be plugged in — it works over your home network.
 
    ```
    adb connect 192.168.1.60:5555
-   adb install medialib-0.2.0.apk
+   adb install knivy-0.4.0.apk
    ```
 
    Use the television's own address and the filename you actually downloaded.
@@ -114,10 +116,11 @@ app on the television — most do not have one built in.
 
 ## Signing in on a television
 
-You do not type your password with a remote control. When you open the app on a
-television it shows a sign-in screen with a short code on it:
+You never type credentials with a remote control — phones and televisions
+sign in the same way. When you open the app it shows a sign-in screen with a
+short code on it:
 
-> **Sign in to MediaLib**
+> **Sign in to Knivy**
 > On your phone or computer, go to `https://media.knivy.xyz/link` and enter this
 > code
 >
@@ -137,9 +140,10 @@ Some details that save confusion:
   one of those, it is a different character.
 - **Each code works once.** If you approve the same code twice, the second
   attempt is rejected.
-- **There is a way out if the code flow gives you trouble**: the sign-in screen
-  has a **Sign in with password instead** button, which lets you type your
-  credentials with the remote.
+- **If the code flow gives you trouble**, get a fresh code and check you are
+  signed in at [media.knivy.xyz](https://media.knivy.xyz) on the approving device — those
+  two cover nearly every failure. There is no password fallback, because
+  there are no passwords.
 
 ## Updating the app
 

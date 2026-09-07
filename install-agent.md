@@ -4,34 +4,45 @@ The agent is one small program. It has no installer, no dependencies to
 manage, and no Docker. You download a file, run it once to pair it with your
 account, then arrange for it to keep running.
 
-Before you start, sign in at [media.knivy.xyz](https://media.knivy.xyz), go to
-**Settings → Linked Machine** (`/settings/machine`) and press **Generate
-pairing code**. You get an eight-character code like `H4KP-2QRW`. It is valid
-for 15 minutes; if it runs out, generate another one.
+You do not need anything from the website before you start. The agent shows
+an eight-character code like `H4KP-2QRW` when it first runs; you type that code
+at [media.knivy.xyz](https://media.knivy.xyz) under **Settings → Linked
+Machine** — from any device, signed in as you. Codes last 15 minutes and the
+agent shows a fresh one when one runs out.
 
-## Before anything else: ffmpeg
+## The short version
 
-**The agent does not install ffmpeg and does not download it. You have to
-install it yourself.** This is the single most common reason a setup half-works.
+On a machine with a desktop, you do not need the rest of this document:
 
-Without `ffmpeg` and `ffprobe` on the machine:
+1. Download the agent for your platform.
+2. Double-click it. It prints a code and opens the website with the code
+   filled in.
+3. Sign in if asked and press **Link this machine**.
 
-- Scanning still finds your files, but every one of them ends up with no
-  duration, no resolution and no codec information.
-- Anything that cannot be played as-is fails instead of being converted on the
-  fly.
-- "Optimize for streaming" fails.
+That is all the machine itself is ever asked. Everything after it — which
+folders to watch, when to scan, what to convert ahead of time — is on the
+website under **Settings → Linked Machine**, or in the app.
 
-There is no warning at startup when ffmpeg is missing, so check it yourself
-before you go further. On any of the platforms below, this should print a
-version banner:
+There is nothing else to install.
 
-```
-ffmpeg -version
-ffprobe -version
-```
+The commands further down are for machines with no desktop — a NAS, a
+headless server — and for keeping the agent running after a reboot.
 
-Install instructions per platform are in the sections below.
+## ffmpeg comes with it
+
+Nothing to install. The agent carries its own copies of `ffmpeg` and `ffprobe`
+and unpacks them next to its own data the first time it runs — which is why the
+download is around 90 MB for what is otherwise a small program.
+
+That matters because everything the agent does to a video needs them: reading
+how long a file is and what it was encoded with, making the thumbnails, and
+converting anything your browser will not play as-is. An agent without them
+scans happily, fills your library with titles, and then refuses to play any of
+them.
+
+If you would rather it used an ffmpeg you already have, put the paths in the
+agent's config file as `ffmpeg_path` and `ffprobe_path` and it will prefer
+those.
 
 ## Which file to download
 
@@ -41,9 +52,9 @@ All builds are on the releases page:
 
 | Your machine | File |
 | --- | --- |
-| Windows, 64-bit | `medialib-agent-windows-amd64.exe` |
-| Linux, Intel or AMD | `medialib-agent-linux-amd64` |
-| Linux or NAS, ARM (most modern NAS boxes, Raspberry Pi 4/5) | `medialib-agent-linux-arm64` |
+| Windows, 64-bit | `knivy-agent-windows-amd64.exe` |
+| Linux, Intel or AMD | `knivy-agent-linux-amd64` |
+| Linux or NAS, ARM (most modern NAS boxes, Raspberry Pi 4/5) | `knivy-agent-linux-arm64` |
 
 If you are not sure whether your NAS is ARM or Intel, run `uname -m` over SSH.
 `x86_64` means the amd64 build; `aarch64` or `arm64` means the arm64 build.
@@ -52,59 +63,45 @@ If you are not sure whether your NAS is ARM or Intel, run `uname -m` over SSH.
 
 ## Windows
 
-### 1. Install ffmpeg
-
-Open PowerShell and run one of these, depending on what you have:
-
-```
-winget install --id Gyan.FFmpeg -e
-```
-
-```
-choco install ffmpeg
-```
-
-Close and reopen PowerShell afterwards, then confirm `ffmpeg -version` works.
-
-If neither package manager is available, download a build from
-<https://www.gyan.dev/ffmpeg/builds/>, unzip it, and add its `bin` folder to
-your `PATH`.
-
 ### 2. Put the agent somewhere permanent
 
-Create a folder and download the binary into it. `C:\medialib` is a good choice
+Create a folder and download the binary into it. `C:\knivy` is a good choice
 because it stays out of `Program Files`, which matters: the agent replaces its
 own file when it updates itself, and it needs write access to its own folder to
 do that.
 
 ```
-mkdir C:\medialib
-curl.exe -L -o C:\medialib\medialib-agent.exe https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/medialib-agent-windows-amd64.exe
+mkdir C:\knivy
+curl.exe -L -o C:\knivy\knivy-agent.exe https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/knivy-agent-windows-amd64.exe
 ```
 
-### 3. Pair it
+### 3. Link it
 
 ```
-C:\medialib\medialib-agent.exe pair --server https://media.knivy.xyz --code H4KP-2QRW
+C:\knivy\knivy-agent.exe link
 ```
 
-Use your own code. The hyphen is optional — `H4KP2QRW` works the same.
-
-You should see:
+It prints a code and opens the website. Sign in, press **Link this machine**,
+and the command finishes on its own:
 
 ```
 Paired as agent 01K3F7Q2XVJ8R5NBWZ4CDMHT9E.
-Credential stored in C:\Users\you\AppData\Roaming\medialib-agent\config.json.
+Credential stored in C:\Users\you\AppData\Roaming\knivy\config.json.
 Start serving with: agent run
 ```
 
-Pair as the same Windows account that will run the agent later. The credential
+Link as the same Windows account that will run the agent later. The credential
 is written into that account's profile, and another account will not find it.
+
+For a scripted install there is the other direction: generate a code on the
+website (*Other ways to link a machine*) and pass it in —
+`knivy-agent.exe pair --server https://media.knivy.xyz --code H4KP-2QRW`. The
+hyphen is optional.
 
 ### 4. Try it once by hand
 
 ```
-C:\medialib\medialib-agent.exe run
+C:\knivy\knivy-agent.exe run
 ```
 
 Leave it for a few seconds. You are looking for a line like
@@ -121,18 +118,19 @@ not PowerShell, because the quoting below is not the same in both.
 The straightforward version, which starts the agent when you log in:
 
 ```
-schtasks /Create /TN "MediaLib Agent" /TR "\"C:\medialib\medialib-agent.exe\" run" /SC ONLOGON /RL HIGHEST /F
+schtasks /Create /TN "Knivy Agent" /TR "\"C:\knivy\knivy-agent.exe\" run" /SC ONLOGON /RL HIGHEST /F
 ```
 
 This leaves a console window open while it runs. That is normal, and closing it
-stops the agent.
+stops the agent. The task only has to start it once: the agent restarts itself
+after an update or a crash, in the same window.
 
 If the machine reboots without anyone logging in — which is what you want for a
 machine that just sits there — use a start-up task with your account's password
 stored instead:
 
 ```
-schtasks /Create /TN "MediaLib Agent" /TR "\"C:\medialib\medialib-agent.exe\" run" /SC ONSTART /RU "%USERNAME%" /RP * /RL HIGHEST /F
+schtasks /Create /TN "Knivy Agent" /TR "\"C:\knivy\knivy-agent.exe\" run" /SC ONSTART /RU "%USERNAME%" /RP * /RL HIGHEST /F
 ```
 
 `/RP *` prompts for your Windows password and stores it so the task can run
@@ -143,21 +141,21 @@ just created.
 Start it now without rebooting:
 
 ```
-schtasks /Run /TN "MediaLib Agent"
+schtasks /Run /TN "Knivy Agent"
 ```
 
 To allow the home-network connection through the firewall explicitly:
 
 ```
-netsh advfirewall firewall add rule name="MediaLib Agent" dir=in action=allow protocol=TCP localport=8484
+netsh advfirewall firewall add rule name="Knivy Agent" dir=in action=allow protocol=TCP localport=8484
 ```
 
 ### Where things live on Windows
 
 | What | Where |
 | --- | --- |
-| Configuration and credential | `%AppData%\medialib-agent\config.json` |
-| Everything else the agent keeps | `%AppData%\medialib-agent\` |
+| Configuration and credential | `%AppData%\knivy\config.json` |
+| Everything else the agent keeps | `%AppData%\knivy\` |
 
 That folder also holds `state.db` (its record of your files), `lan-cert.pem` and
 `lan-key.pem` (the certificate used for watching at home), and cached poster
@@ -167,29 +165,19 @@ images.
 
 ## Linux
 
-### 1. Install ffmpeg
-
-```
-sudo apt install ffmpeg          # Debian, Ubuntu, Raspberry Pi OS
-sudo dnf install ffmpeg          # Fedora
-sudo pacman -S ffmpeg            # Arch
-```
-
-On Debian and Ubuntu this pulls in `ffprobe` as well.
-
 ### 2. Create a user and install the binary
 
 Running the agent as its own account keeps it away from the rest of your system.
 
 ```
-sudo useradd --system --create-home --home-dir /var/lib/medialib-agent --shell /usr/sbin/nologin medialib
-sudo mkdir -p /opt/medialib-agent
-sudo curl -L -o /opt/medialib-agent/medialib-agent https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/medialib-agent-linux-amd64
-sudo chmod 0755 /opt/medialib-agent/medialib-agent
-sudo chown -R medialib:medialib /opt/medialib-agent
+sudo useradd --system --create-home --home-dir /var/lib/knivy-agent --shell /usr/sbin/nologin knivy
+sudo mkdir -p /opt/knivy-agent
+sudo curl -L -o /opt/knivy-agent/knivy-agent https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/knivy-agent-linux-amd64
+sudo chmod 0755 /opt/knivy-agent/knivy-agent
+sudo chown -R knivy:knivy /opt/knivy-agent
 ```
 
-On ARM, swap `medialib-agent-linux-amd64` for `medialib-agent-linux-arm64`.
+On ARM, swap `knivy-agent-linux-amd64` for `knivy-agent-linux-arm64`.
 
 The `chown` on the whole directory is deliberate. When the agent updates itself
 it writes the new binary next to the old one and swaps them, which it cannot do
@@ -199,7 +187,7 @@ updates by hand from then on.
 
 ### 3. Give it access to your media
 
-The `medialib` account needs to read your video folders. Read access is enough
+The `knivy` account needs to read your video folders. Read access is enough
 for scanning and playback. If you plan to use "optimize for streaming" or
 Webshare downloads, it needs write access to those folders too.
 
@@ -207,50 +195,57 @@ The simplest approach on a single-user machine is to add it to the group that
 already owns the files:
 
 ```
-sudo usermod -aG "$(stat -c '%G' /srv/media)" medialib
+sudo usermod -aG "$(stat -c '%G' /srv/media)" knivy
 ```
 
 Check it worked, using one of your own paths:
 
 ```
-sudo -u medialib test -r /srv/media && echo readable || echo "not readable"
+sudo -u knivy test -r /srv/media && echo readable || echo "not readable"
 ```
 
-### 4. Pair it
+### 4. Link it
 
-Pair as the `medialib` user, so the credential lands where the service will look
+Link as the `knivy` user, so the credential lands where the service will look
 for it:
 
 ```
-sudo -u medialib env HOME=/var/lib/medialib-agent \
-  /opt/medialib-agent/medialib-agent pair --server https://media.knivy.xyz --code H4KP-2QRW
+sudo -u knivy env HOME=/var/lib/knivy-agent \
+  /opt/knivy-agent/knivy-agent link
 ```
 
+It prints a code and waits. Type the code at
+[media.knivy.xyz/settings/machine](https://media.knivy.xyz/settings/machine)
+on any device; the command finishes once the machine is linked. (With a code
+generated on the website instead, the same command is
+`… knivy-agent pair --server https://media.knivy.xyz --code H4KP-2QRW`.)
+
 The credential is written to
-`/var/lib/medialib-agent/.config/medialib-agent/config.json` with permissions
+`/var/lib/knivy-agent/.config/knivy/config.json` with permissions
 `0600`.
 
 ### 5. Install the service
 
-Save this as `/etc/systemd/system/medialib-agent.service`:
+Save this as `/etc/systemd/system/knivy-agent.service`:
 
 ```ini
 [Unit]
-Description=MediaLib agent
+Description=Knivy agent
 Documentation=https://github.com/Spameri/MediaLibDocumentation
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=medialib
-Group=medialib
+User=knivy
+Group=knivy
 # The agent stores its configuration under $HOME and refuses to start
 # without one, so set it explicitly rather than relying on the account.
-Environment=HOME=/var/lib/medialib-agent
-ExecStart=/opt/medialib-agent/medialib-agent run
-# Restart on any exit, including a clean one: after installing an update the
-# agent exits deliberately so that the new binary is the one that comes back.
+Environment=HOME=/var/lib/knivy-agent
+ExecStart=/opt/knivy-agent/knivy-agent run
+# The agent restarts itself after an update, so this is here for the case it
+# cannot handle: the whole thing being killed. Restart=always rather than
+# on-failure, because a clean exit here is still an agent that is not serving.
 Restart=always
 RestartSec=10
 # Transcoding is CPU-hungry; keep the rest of the machine usable.
@@ -265,13 +260,13 @@ Then:
 
 ```
 sudo systemctl daemon-reload
-sudo systemctl enable --now medialib-agent
+sudo systemctl enable --now knivy-agent
 ```
 
 Watch it start:
 
 ```
-sudo journalctl -u medialib-agent -f
+sudo journalctl -u knivy-agent -f
 ```
 
 Within a few seconds you should see `tunnel established to
@@ -287,18 +282,18 @@ sudo ufw allow from 192.168.0.0/16 to any port 8484 proto tcp
 
 | What | Where |
 | --- | --- |
-| Configuration and credential | `$HOME/.config/medialib-agent/config.json` |
-| Everything else the agent keeps | `$HOME/.config/medialib-agent/` |
+| Configuration and credential | `$HOME/.config/knivy/config.json` |
+| Everything else the agent keeps | `$HOME/.config/knivy/` |
 
-With the service set up as above, `$HOME` is `/var/lib/medialib-agent`.
+With the service set up as above, `$HOME` is `/var/lib/knivy-agent`.
 
 ---
 
 ## NAS
 
 A NAS is just Linux with a friendlier front end, so the Linux instructions apply
-once you have a shell. Two things are usually harder than on a normal computer:
-getting ffmpeg, and getting something to start at boot.
+once you have a shell. The awkward part is getting something to start at boot;
+ffmpeg is not a problem, because the agent brings its own.
 
 Enable SSH first — on Synology under **Control Panel → Terminal & SNMP**, on
 QNAP under **Control Panel → Telnet / SSH** — then connect with
@@ -306,24 +301,16 @@ QNAP under **Control Panel → Telnet / SSH** — then connect with
 
 ### ffmpeg on a NAS
 
-Check whether you already have it:
+Nothing to do — the agent unpacks its own alongside its data directory. This is
+worth knowing on a NAS in particular, where the usual answer was Entware or
+borrowing the copy inside a Plex or Video Station package, and where those
+vendor builds are often missing encoders the agent needs.
 
-```
-which ffmpeg ffprobe
-```
+It does mean the agent wants roughly 300 MB of space in its data directory. On
+a NAS whose system volume is small, point `HOME` at the data volume when you
+run it — the systemd unit further up already does this.
 
-Many NAS packages (Plex, Emby, Video Station) ship their own ffmpeg that is not
-on your `PATH` and may be a cut-down build. If nothing turns up, the usual route
-is [Entware](https://github.com/Entware/Entware/wiki), which gives you a package
-manager that survives firmware updates:
-
-```
-opkg update
-opkg install ffmpeg
-```
-
-If you do find an ffmpeg belonging to another package and want to use it, point
-the agent at it explicitly rather than moving it. Add these two lines to
+If you would rather it used an ffmpeg you already have, name it explicitly in
 `config.json` after pairing:
 
 ```json
@@ -333,9 +320,6 @@ the agent at it explicitly rather than moving it. Add these two lines to
 }
 ```
 
-Be aware that vendor builds are sometimes missing encoders the agent needs. If
-transcoding fails but a normal file plays, that is the likely cause.
-
 ### Installing and pairing
 
 Most NAS boxes are ARM, so start with the arm64 build. Put it somewhere on the
@@ -343,25 +327,31 @@ data volume — the system partition is often small and gets wiped by firmware
 updates.
 
 ```
-mkdir -p /volume1/medialib
-curl -L -o /volume1/medialib/medialib-agent https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/medialib-agent-linux-arm64
-chmod +x /volume1/medialib/medialib-agent
-/volume1/medialib/medialib-agent pair --server https://media.knivy.xyz --code H4KP-2QRW
+mkdir -p /volume1/knivy
+curl -L -o /volume1/knivy/knivy-agent https://github.com/Spameri/MediaLibDocumentation/releases/latest/download/knivy-agent-linux-arm64
+chmod +x /volume1/knivy/knivy-agent
+/volume1/knivy/knivy-agent link
 ```
 
-If that fails with `cannot execute binary file`, you have an Intel NAS — use
-`medialib-agent-linux-amd64` instead.
+It prints a code and waits; type the code at
+[media.knivy.xyz/settings/machine](https://media.knivy.xyz/settings/machine) on
+your phone or computer, and the command finishes once the NAS is linked.
+
+If it fails with `cannot execute binary file`, you have an Intel NAS — use
+`knivy-agent-linux-amd64` instead.
 
 Your library paths on a NAS look like `/volume1/movies` and `/volume1/tv`
-(Synology) or `/share/Multimedia/Movies` (QNAP). Note them down; you will type
-them into the web UI in [first-steps.md](first-steps.md).
+(Synology) or `/share/Multimedia/Movies` (QNAP). You should not need them: the
+website lists the machine's own disks and you pick from them. Note them down
+anyway if this NAS is one you reach only over SSH — a typed path is the fallback
+for exactly that case. See [first-steps.md](first-steps.md).
 
 ### Starting it at boot
 
 **If your NAS has systemd** — check with `systemctl --version` — use the unit
 file from the Linux section above, adjusting `ExecStart` to
-`/volume1/medialib/medialib-agent run` and setting `Environment=HOME=` to a
-directory on the data volume, for example `/volume1/medialib/home`. Pair as that
+`/volume1/knivy/knivy-agent run` and setting `Environment=HOME=` to a
+directory on the data volume, for example `/volume1/knivy/home`. Pair as that
 same user with the same `HOME` so the credential lands in the right place.
 
 **On Synology DSM**, the supported route is the built-in scheduler: **Control
@@ -369,7 +359,7 @@ Panel → Task Scheduler → Create → Triggered Task → User-defined script**
 the user set to `root`, the event set to **Boot-up**, and the script:
 
 ```
-/volume1/medialib/medialib-agent run &
+/volume1/knivy/knivy-agent run &
 ```
 
 **On QNAP**, use **Control Panel → System → Hardware → Autorun** (which runs
@@ -397,7 +387,7 @@ server and the server can reach it back.
 tunnel established to wss://media.knivy.xyz/tunnel
 ```
 
-`journalctl -u medialib-agent -f` on Linux; the console window on Windows.
+`journalctl -u knivy-agent -f` on Linux; the console window on Windows.
 
 Repeated `tunnel closed: … — reconnecting in 2s` lines mean it cannot get out to
 the server. The delay doubles on each failed attempt up to a minute, so it keeps
@@ -406,7 +396,7 @@ trying without hammering anything.
 **3. The version.** Confirms the binary itself runs:
 
 ```
-/opt/medialib-agent/medialib-agent version
+/opt/knivy-agent/knivy-agent version
 ```
 
 **4. The home-network endpoint.** From another machine on the same network:
@@ -427,26 +417,44 @@ verifying a signature before it does. The first check happens a few minutes
 after it starts, at a randomised moment, so a batch of machines restarted
 together do not all ask at once.
 
-After installing an update it exits so that the service manager starts the new
-binary. This is why `Restart=always` is in the unit file above. If a new build
-fails to work three times in a row, the agent puts the previous one back by
-itself.
+Installing an update means the running program has to be replaced by the one
+just downloaded, and the agent does that itself: the thing you start is a small
+supervisor that runs the agent and starts it again — after an update, after a
+crash, after the machine kills it for using too much memory. Nothing on your
+side has to arrange that. The restart waits for anything you are watching to
+finish first, so an update never stops a film halfway.
+
+Before installing, the new build is asked for its version, which it can only
+answer by starting. A download this machine cannot run is thrown away and the
+working agent keeps going. If a new build does install and then fails three
+times in a row — or comes up but never reaches Knivy — the agent puts the
+previous one back by itself.
+
+**Once, if you are updating from 0.9.2 or older:** that version exits after
+installing an update and does not come back, because the code doing the
+installing is the old code. Start the agent on the machine one more time after
+the update lands. From 0.9.3 on it comes back on its own.
 
 To turn this off, add `"disable_auto_update": true` to `config.json` and restart
-the agent. You are then responsible for replacing the binary yourself.
+the agent. You are then responsible for replacing the binary yourself. One
+exception the setting does not cover: a build old enough that Knivy no longer
+supports it is installed anyway, because the alternative is a machine that
+quietly stops serving.
 
 ## Things worth knowing
 
-- **One machine per account.** Pairing a second machine is refused with "This
-  account already has a linked machine. Revoke it first." Unlink the old one
-  under Settings → Linked Machine first.
+- **One machine per account.** Linking a second machine is refused with "This
+  account already has a linked machine." Unlink the old one under Settings →
+  Linked Machine first.
 - **The agent only ever connects outward** — to `media.knivy.xyz` over HTTPS and
   one long-lived WebSocket. Nothing needs to reach in from the internet, so
   there is nothing to configure on your router.
 - **It listens on port 8484** on your local network only, for watching at home.
 - **The full scan repeats every six hours.** You can also trigger one at any
-  time from the web UI.
+  time from the website or the app.
+- **A folder holds whatever you put in it.** You are not asked whether it is for
+  films or programmes; what each file is comes from the file.
 - **The credential file is worth protecting.** Anyone who copies
   `config.json` can impersonate your machine. It is written `0600` for that
-  reason. If you think it has leaked, unlink the machine in the web UI and pair
-  again — the old credential stops working immediately.
+  reason. If you think it has leaked, unlink the machine in the web UI and link
+  it again — the old credential stops working immediately.

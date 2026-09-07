@@ -117,10 +117,19 @@ where you stand before you have built a routine around it.
 Three parts, three answers.
 
 **The agent updates itself.** It checks once a day, verifies a signature on the
-new build before installing it, and restarts into it. If a new version fails to
-start properly three times, it puts the previous one back on its own. You do not
-have to do anything. If you would rather control this, add
-`"disable_auto_update": true` to its `config.json`.
+new build, runs it once before installing it, and restarts into it — waiting
+for anything you are watching to finish before it does. If a new version fails
+to start properly three times, or comes up and never reaches Knivy, it puts the
+previous one back on its own. You do not have to do anything.
+
+If you would rather control this, add `"disable_auto_update": true` to its
+`config.json`. A build so old that Knivy no longer supports it is still
+installed: past that point it stops working anyway, and an agent that quietly
+stops serving is not what turning updates off was asking for.
+
+Agents on 0.9.2 and older need starting by hand once after they update — that
+version exits when it installs a new build and nothing brings it back. It is
+the last time.
 
 **The Android app does not.** There is no store to update it and no in-app
 updater yet, so when a new version comes out you download the new `.apk` and
@@ -225,26 +234,12 @@ only thing you lose is the watch history, which lives on the server.
 
 ## Something is broken. Where do I report it?
 
-Sign in and go to [media.knivy.xyz/feedback](https://media.knivy.xyz/feedback).
-Pick whether it is a fault or a request, describe it, and send.
+Go to [media.knivy.xyz/feedback](https://media.knivy.xyz/feedback), which takes you to the
+public issue tracker. Say what you expected, what happened instead, and which
+version you are running.
 
-That files a report in the public issue tracker under your display name and the
-versions you are running. Your email address is never included, and neither is
-anything about what is in your library. You do not need a GitHub account.
+Reports are filed under your own GitHub account, so nothing about you or your
+library goes anywhere unless you type it there yourself.
 
 Include which film or episode it was, what you were watching on, and whether you
 were at home or away. Those three facts distinguish most causes from each other.
-
-## Does anything I do reach a third party?
-
-Two things, both only when you ask for them.
-
-Pressing **Trailer** on a title opens a YouTube player. That embed is the one
-third-party frame in the product; it loads from youtube-nocookie.com, YouTube's
-reduced-tracking domain, and nothing loads until you press the button. If you
-never press it, YouTube never hears from you.
-
-Submitting a scene to the **guessing game** uploads that single image to
-knivy.xyz under your linked account, where it waits for a moderator. Nothing
-else about your library travels with it, and nothing is ever submitted
-automatically — every submission is a button you pressed on a scene you chose.

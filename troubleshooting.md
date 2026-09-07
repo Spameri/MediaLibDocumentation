@@ -10,6 +10,24 @@ doing, which film or episode, and what you were watching on.
 
 ---
 
+## Start here: the machine's page on the website
+
+Most of what goes wrong is on the machine holding your files, and the website
+keeps a page about it: **Settings → Linked Machine**
+([media.knivy.xyz/settings/machine](https://media.knivy.xyz/settings/machine)).
+It shows whether the machine is online, which folders it is watching, what it
+has been asked to do lately, and — under **Machine health** — the last things
+the agent itself reported going wrong, with a **Report a problem** button that
+sends its recent logs along.
+
+If the machine shows **Offline** and stays that way, the agent is not running —
+which is the answer to a surprising number of the problems below. On the
+machine itself, the agent writes a log under its configuration directory
+(`logs/agent.log` next to `config.json`; the paths are in
+[install-agent.md](install-agent.md)).
+
+---
+
 ## The agent shows Offline
 
 **Where you see it:** Settings → Linked Machine shows a red **Offline** badge
@@ -34,11 +52,11 @@ wrong.
 2. **Is the agent actually running?**
 
    ```
-   sudo systemctl status medialib-agent          # Linux
+   sudo systemctl status knivy-agent          # Linux
    ```
 
    ```
-   schtasks /Query /TN "MediaLib Agent"          # Windows
+   schtasks /Query /TN "Knivy Agent"          # Windows
    ```
 
    If it is not running, start it and look at why it stopped.
@@ -46,7 +64,7 @@ wrong.
 3. **Read the log.** This is where the answer usually is.
 
    ```
-   sudo journalctl -u medialib-agent -n 50       # Linux
+   sudo journalctl -u knivy-agent -n 50       # Linux
    ```
 
    On Windows, the console window the task opened.
@@ -60,14 +78,14 @@ wrong.
 
 4. **Check it is running as the account you paired with.** This catches a lot of
    people. The credential is stored in the running account's own profile folder.
-   Pair as yourself and then run the service as `SYSTEM`, or as a `medialib`
+   Pair as yourself and then run the service as `SYSTEM`, or as a `knivy`
    system user, and it will not find anything.
 
    The fix is to pair again as the account that runs the service:
 
    ```
-   sudo -u medialib env HOME=/var/lib/medialib-agent \
-     /opt/medialib-agent/medialib-agent pair --server https://media.knivy.xyz --code XXXX-XXXX
+   sudo -u knivy env HOME=/var/lib/knivy-agent \
+     /opt/knivy-agent/knivy-agent pair --server https://media.knivy.xyz --code XXXX-XXXX
    ```
 
 5. **Outbound traffic.** The agent needs to reach `media.knivy.xyz` on port 443,
@@ -109,7 +127,7 @@ never a bug — it is one of four things.
    user, not as yourself:
 
    ```
-   sudo -u medialib ls /srv/media/movies
+   sudo -u knivy ls /srv/media/movies
    ```
 
    `Permission denied` is your answer. Add the account to the owning group, or
@@ -132,9 +150,17 @@ a specific cause: episodes that are not inside a folder named after the show.
 The show name comes from the folder, not the filename. See
 [first-steps.md](first-steps.md#how-your-files-need-to-be-arranged).
 
-**Files appear but have no duration, resolution or quality label** means ffmpeg
-is missing on that machine. The files were found and listed but could not be
-inspected. Install `ffmpeg` and `ffprobe`, then scan again.
+**Files appear but have no duration, resolution or quality label** means the
+agent could not inspect them — they were found and listed, but never opened.
+Nothing plays in this state either.
+
+The agent carries its own ffmpeg, so this normally means the unpacked copy is
+missing or broken rather than absent from the machine. Its log says which it is
+on startup, one line beginning `ffmpeg:`. Deleting the `bin` directory inside
+the agent's data directory and restarting makes it unpack them again.
+
+Agents from before 0.5.0 did not carry ffmpeg and needed it installed
+separately; upgrading is the fix there.
 
 ---
 
@@ -237,10 +263,12 @@ You can also upload your own `.srt` if you have it.
 
 ## The app cannot sign in
 
-**"Invalid credentials" or the login is rejected.** Your email and password are
-the ones you registered with on the website. Confirm they work by signing in at
-[media.knivy.xyz](https://media.knivy.xyz) in a browser. If they do not work
-there either, use the password reset on the sign-in page.
+**The sign-in is rejected.** The app signs in by showing a short code that
+you approve at [media.knivy.xyz/link](https://media.knivy.xyz/link) — there is no
+password typed into the app. Confirm your account works by signing in at
+[media.knivy.xyz](https://media.knivy.xyz) in a browser (that sign-in goes through your
+knivy.xyz account); if it does not, the problem is the account, not the
+app.
 
 **The app cannot reach anything at all.** Check that the phone has working
 internet, then that `https://media.knivy.xyz` loads in the phone's browser. If
@@ -258,8 +286,9 @@ the current server — reinstall the newest `.apk` from the releases page.
   [media.knivy.xyz](https://media.knivy.xyz) before the `/link` page will do
   anything.
 
-If the code flow is not working at all, the television's sign-in screen has a
-**Sign in with password instead** button.
+If the code flow is not working at all, restart the app for a fresh code and
+make sure the device you approve from is signed in first — those two cover
+nearly every failure that is not on this list.
 
 **Signed in yesterday, signed out today.** Sessions last a long time and renew
 themselves. Being asked to sign in again usually means the device was revoked,
